@@ -46,7 +46,7 @@ public class PurchaseBootcoinService {
 		
 		PurchaseBootcoin p= purchaseBootcoinRepo.findById(id).share().block();
 		if(p.getStatus() == 2L) {
-			throw new RuntimeException("Esta solicitud ya sido procesada");
+			throw new RuntimeException("Esta solicitud ya ha sido procesada");
 		}
 		Movement m=new Movement();
 		//Obtenemos el tipo de cambio desde REDIS
@@ -69,6 +69,7 @@ public class PurchaseBootcoinService {
 		m.setStatus(1L);
 		p2pServiceProducer.sendSaveMovementService(m);
 
+		p.setId(id);
 		p.setStatus(2L);
 
 		return purchaseBootcoinRepo.save(p);
